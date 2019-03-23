@@ -40,11 +40,15 @@ if(isset($_POST) and $_SERVER['REQUEST_METHOD'] == "POST")
     }
 }
 ?>
-<form enctype="multipart/form-data" id="form1" method="post" action="index.php">
-<input type="file" name="file1" accept=".ogg,.flac,.mp3" required="required"/>
-<input type="submit" name="submit"/>
+<form enctype="multipart/form-data" method="post" action="index.php">
+<fieldset class="form-group">
+    <p>Аудио</p>
+    <input type="file" name="file1" accept=".ogg,.flac,.mp3" required="required"/>
+</fieldset>
+
+<input type="submit" value="Качи!" class="btn btn-primary" name="submit"/>
 </form>
-<audio controls>
+<audio>
   <source src="audio/1553190003.mp3" type="audio/mpeg">
 Your browser does not support the audio element.
 </audio>
