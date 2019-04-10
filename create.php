@@ -45,7 +45,7 @@ if(isset($_POST) and $_SERVER['REQUEST_METHOD'] == "POST") {
         endif;
 }
 ?>
-<form action="create.php" method="POST" enctype="multipart/form-data">
+<form action="create.php" method="POST" enctype="multipart/form-data" autocomplete="off">
     <fieldset class="form-group">
         <label>Изпълнител</label>
         <input type="text" name="singer" id="name" class="form-control">

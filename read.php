@@ -23,8 +23,10 @@ if(isset($_POST['audio'])) {
         echo '<th>Име на песента</th>';
         echo '<th>Изпълнител</th>';
         echo '<th>Потребител</th>';
+        if(isset($_SESSION['id'])) { 
         echo '<th>Оценка</th>';
         echo '<th>Изтегли</th>';
+        }
         echo '<th></th>';
         echo '<th></th>';
         echo '<th></th>';
@@ -38,6 +40,7 @@ if(isset($_POST['audio'])) {
                ?>
                <td>
                <?php 
+               if(isset($_SESSION['id'])) { 
                 $q = mysqli_query($connect, "SELECT AVG(rate) FROM user_rate WHERE audio_id = " . $row['audio_id']);
                 $r = mysqli_fetch_assoc($q);
                 $r = $r['AVG(rate)'];
@@ -59,13 +62,17 @@ if(isset($_POST['audio'])) {
                     <button type="submit" class="btn btn-success">Оцени</button>
                </form>
                </td>
+               <?php } ?>
                <?php
+                if(isset($_SESSION['id'])) { 
                 echo '<td>' . $row['downloads']. '</td>';
+                }
                 ?> <td><audio controls>
                 <source src="./uploads/<?= $row['audio'] ?>" type="audio/mpeg">
               Your browser does not support the audio element.
               </audio>
                </td>
+               <?php if(isset($_SESSION['id'])) { ?>
                <td>
                 <form action="read.php" method="post">
                     <input type="hidden" name="id" value="<?= $row['audio_id'] ?>">
@@ -74,8 +81,12 @@ if(isset($_POST['audio'])) {
                 </form>
                </td>
                <?php
+               }
+               if(isset($_SESSION['id'])) {
+               if($_SESSION['id'] === $row['user_id']) {
                 echo '<td><a class="btn btn-success" href = update.php?id=' .$row['audio_id']. '>Промени</a></td>';
                 echo '<td><a class="btn btn-danger" href = delete.php?id=' .$row['audio_id']. '>Изтрий</a></td>';
+               }}
             echo '</tr>';
         }
         echo '</table>';

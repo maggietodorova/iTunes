@@ -8,7 +8,7 @@
     ?>
     <form action="update.php?id=<?= $_GET['id'] ?>" method="POST" enctype="multipart/form-data">
         <fieldset class="form-group">
-            <label>Name</label>
+            <label>Име</label>
             <input type="text" name="audio_name" value="<?= $row['audio_name'] ?>" class="form-control">
         </fieldset>
         <fieldset class="form-group">
@@ -16,7 +16,7 @@
     <input type="file" name="file1" accept=".ogg,.flac,.mp3">
     </fieldset>
         <fieldset class="form-group">
-            <label>Singer</label>
+            <label>Изпълнител</label>
             <input type="text" name="singer" value="<?= $row['singer'] ?>" class="form-control">
         </fieldset>
         <fieldset class="form-group">
