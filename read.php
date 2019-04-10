@@ -1,63 +1,85 @@
-<?php include './config/config.php'; ?>
+<?php 
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
 
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-</head>
-<body>
-    <a class = "btn btn-success mb-3" href='create.php'>Create</a>
+include('./header.php'); 
+
+?>
+<?php
+if(isset($_POST['audio'])) {
+    $id = $_POST['id'];
+    $audio = $_POST['audio'];
+    $q1 = mysqli_query($connect, "UPDATE audio SET downloads = downloads + 1 WHERE audio_id = $id");
+    header('Location: uploads/'.$audio);
+}
+?>
+    <?php if(isset($_SESSION['success'])): ?>
+        <p class="alert alert-success"><i class="fa fa-check fa-2x" aria-hidden="true"></i><?= $_SESSION['success'] ?></p>
+        <?php unset($_SESSION['success']); ?>
+    <?php endif; ?>
     <?php
         $result = mysqli_query($connect, 'SELECT * FROM audio INNER JOIN users ON audio.user_id = users.id');
-        echo '<table border=1>';
-        echo '<tr>';
-        echo '<th>Name</th>';
-        echo '<th>Audio</th>';
-        echo '<th>Singer</th>';
-        echo '<th>User</th>';
-        echo '<th>Rate</th>';
-        echo '<th>Download</th>';
+        echo '<table class="table table-hover table-responsive-sm">';
+        echo '<thead><tr>';
+        echo '<th>Име на песента</th>';
+        echo '<th>Изпълнител</th>';
+        echo '<th>Потребител</th>';
+        echo '<th>Оценка</th>';
+        echo '<th>Изтегли</th>';
         echo '<th></th>';
         echo '<th></th>';
         echo '<th></th>';
-        echo '</tr>';
+        echo '<th></th>';
+        echo '</thead></tr>';
         while($row = mysqli_fetch_assoc($result)) {
             echo '<tr>';
                 echo '<td>' . $row['audio_name']. '</td>';
-                echo '<td>' . $row['audio']. '</td>';
                 echo '<td>' . $row['singer']. '</td>';
                 echo '<td>' . $row['name']. '</td>';
-                echo '<td>' . $row['ratings']. '</td>';
-                echo '<td>' . $row['downloads']. '</td>';
                ?>
                <td>
+               <?php 
+                $q = mysqli_query($connect, "SELECT AVG(rate) FROM user_rate WHERE audio_id = " . $row['audio_id']);
+                $r = mysqli_fetch_assoc($q);
+                $r = $r['AVG(rate)'];
+                if($r !== NULL) {
+                    echo "<strong>$r</strong>";
+                } else {
+                    echo "<strong>0</strong>";
+                }
+               ?>
+               <form action="rate.php?id=<?= $row['audio_id'] ?>" method="POST">
+                    <select name="rate" >
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                    </select>
+                    <button type="submit" class="btn btn-success">Оцени</button>
+               </form>
+               </td>
+               <?php
+                echo '<td>' . $row['downloads']. '</td>';
+                ?> <td><audio controls>
+                <source src="./uploads/<?= $row['audio'] ?>" type="audio/mpeg">
+              Your browser does not support the audio element.
+              </audio>
+               </td>
+               <td>
                 <form action="read.php" method="post">
-                    <input type="hidden" name="id" value="<?= $row['id'] ?>">
+                    <input type="hidden" name="id" value="<?= $row['audio_id'] ?>">
                     <input type="hidden" name="audio" value="<?= $row['audio'] ?>">
-                    <button name="submit" type="submit">Свали</td>';
+                    <input type="submit" class="btn btn-info" value="Свали">
                 </form>
                </td>
                <?php
-                echo '<td><a class="btn btn-success" href = update.php?id=' .$row['id']. '>Update</a></td>';
-                echo '<td><a class="btn btn-danger" href = delete.php?id=' .$row['id']. '>Delete</a></td>';
+                echo '<td><a class="btn btn-success" href = update.php?id=' .$row['audio_id']. '>Промени</a></td>';
+                echo '<td><a class="btn btn-danger" href = delete.php?id=' .$row['audio_id']. '>Изтрий</a></td>';
             echo '</tr>';
         }
         echo '</table>';
+        
     ?>
 
-    <?php
-    if(isset($_POST['submit'])) {
-        $id = $_POST['id'];
-        $id = $_POST['audio'];
-        $q = mysqli_connect($connect, "UPDATE audio SET downloads = downloads + 1 WHERE id = $id");
-        header('Content-Disposition: attachment; filename="' . 'uploads/' . $audio . '"');    }
-
-
-        ?>
-</body>
-</html>
+<?php include 'footer.php'; ?>

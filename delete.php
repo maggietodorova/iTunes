@@ -2,10 +2,10 @@
 <?php
 if(isset($_GET['id'])) {
     $id = $_GET['id'];
-    $query = mysqli_query($connect, "DELETE FROM `audio` WHERE `id` = $id");
+    $query = mysqli_query($connect, "DELETE FROM `audio` WHERE `audio_id` = $id");
     if($query) {
-        header('Location: index.php'); 
+        header('Location: read.php'); 
     }
 } else {
-    header('Location: index.php');
+    echo 'err';
 }
